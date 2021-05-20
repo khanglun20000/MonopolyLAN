@@ -1,0 +1,17 @@
+﻿<Properties StartupConfiguration="{6CB9435B-C119-B710-47EF-0CBD9818520D}|">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Resources/Scripts/GameController.cs">
+    <Files>
+      <File FileName="Assets/Resources/Scripts/GameController.cs" Line="17" Column="1" />
+      <File FileName="Assets/Resources/Scripts/PlayerBehaviour.cs" />
+      <File FileName="Assets/Resources/Scripts/RouteToGo.cs" />
+      <File FileName="Assets/Resources/Scripts/TileFunction.cs" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.ItemProperties.Assembly-CSharp PreferredExecutionTarget="b3f87b19-fd0d-4d56-bed0-2450a9c7b370" />
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MultiItemStartupConfigurations />
+</Properties>
