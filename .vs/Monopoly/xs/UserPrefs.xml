@@ -1,15 +1,20 @@
 ﻿<Properties StartupConfiguration="{6CB9435B-C119-B710-47EF-0CBD9818520D}|">
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Resources/Scripts/GameController.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Resources/Scripts/PlayerBehaviour.cs">
     <Files>
-      <File FileName="Assets/Resources/Scripts/GameController.cs" Line="17" Column="1" />
-      <File FileName="Assets/Resources/Scripts/PlayerBehaviour.cs" />
-      <File FileName="Assets/Resources/Scripts/RouteToGo.cs" />
-      <File FileName="Assets/Resources/Scripts/TileFunction.cs" />
+      <File FileName="Assets/Resources/Scripts/GameController.cs" Line="75" Column="1" />
+      <File FileName="Assets/Resources/Scripts/Networking/NetworkPlayer.cs" Line="111" Column="9" />
+      <File FileName="Assets/Resources/Scripts/PlayerBehaviour.cs" Line="297" Column="14" />
+      <File FileName="Assets/Resources/Scripts/Networking/NetworkGamePlayerLobby.cs" Line="1" Column="1" />
+      <File FileName="Assets/Resources/Scripts/Networking/NetworkRoomPlayerLobby.cs" Line="1" Column="1" />
+      <File FileName="Assets/Resources/Scripts/Networking/PlayerSpawnSystem.cs" />
+      <File FileName="Assets/Resources/Scripts/Networking/NetworkManagerLobby.cs" Line="10" Column="39" />
+      <File FileName="Assets/Resources/Scripts/Networking/UI_MainMenu.cs" Line="1" Column="1" />
+      <File FileName="Assets/Resources/Scripts/Networking/JoinLobbyMenu.cs" Line="1" Column="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.ItemProperties.Assembly-CSharp PreferredExecutionTarget="b3f87b19-fd0d-4d56-bed0-2450a9c7b370" />
+  <MonoDevelop.Ide.ItemProperties.Assembly-CSharp PreferredExecutionTarget="78ab40c2-495c-42ee-a0ee-b456cc0e84d3" />
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore />
   </MonoDevelop.Ide.DebuggingService.Breakpoints>

@@ -1,15 +1,16 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Mirror;
 
-public class PlayerBehaviour : NetworkBehaviour
+
+public class PlayerBehaviour : MonoBehaviour
 {
     private readonly Transform[] routes = new Transform[40]; // normal route
     private readonly Transform[] routes1 = new Transform[6]; // lucky route
     private readonly Transform[] routes2 = new Transform[6]; // unlucky route
     private readonly Transform[] routes3 = new Transform[6]; // ox1 route
     private readonly Transform[] routes4 = new Transform[6]; // ox2 route
+
     private int routeToGo, specRouteToGo;
 
     private readonly Transform[] tiles = new Transform[40]; // normal tiles
@@ -26,8 +27,10 @@ public class PlayerBehaviour : NetworkBehaviour
     [SerializeField] private float speedModifier;
 
     private bool coroutineAllowed;// once each call in update
+
     private bool moveAllowed; // avoid having new move while moving
-    [SerializeField] private bool isStopping, isNormalTile = true, isBtw2Routes = false, isInSpecRoute;
+
+    [SerializeField] private bool isStopping, isNormalTile = true, isBtw2Routes = false, isInSpecRoute, isLoseTurn = false;
 
     enum RouteTypes
     {
@@ -39,18 +42,19 @@ public class PlayerBehaviour : NetworkBehaviour
     }
     private RouteTypes rt;
 
-    enum PlayerTurn
-    {
-        isMyTurn,
-        notMyTurn
-    }
-    [SerializeField]private PlayerTurn pt;
+    private NetworkPlayer np;
 
+    [SerializeField] private bool isTurn = false;
+
+    public bool isServer = false;
+
+    [SerializeField] bool isLocalPlayer = false;
 
     private void Awake()
     {
         GameObject map = GameObject.Find("Map");
         GameObject Route = GameObject.Find("Routes");
+        np = transform.GetComponent<NetworkPlayer>();
 
         // get the normal route (0-39)
         for (int i = 0; i < routes.Length; i++)
@@ -58,7 +62,7 @@ public class PlayerBehaviour : NetworkBehaviour
             routes[i] = Route.transform.GetChild(i);
         }
         // get the lucky route (40-45)
-        for (int i = 0; i< routes1.Length; i++)
+        for (int i = 0; i < routes1.Length; i++)
         {
             routes1[i] = Route.transform.GetChild(i + 40);
         }
@@ -105,13 +109,18 @@ public class PlayerBehaviour : NetworkBehaviour
     {
         if (isLocalPlayer)
         {
-            if (Input.GetKeyDown(KeyCode.Space) && moveAllowed == false && pt == PlayerTurn.isMyTurn)
+            if (Input.GetKeyDown(KeyCode.Space) && moveAllowed == false && isTurn)
             {
                 moveAllowed = true;
                 if (isBtw2Routes)
                 {
                     // roll 1 dice
                     stepNum = Random.Range(1, 7);
+                }
+                else if (isLoseTurn)
+                {
+                    np.CmdAlterTurns();
+                    isLoseTurn = false;
                 }
                 else
                 {
@@ -121,7 +130,7 @@ public class PlayerBehaviour : NetworkBehaviour
             }
         }
 
-        if ((curTile == 17 && isStopping) || (specCurTile >= 0 && specCurTile <= 5 && isInSpecRoute)) 
+        if ((curTile == 17 && isStopping) || (specCurTile >= 0 && specCurTile <= 5 && isInSpecRoute)) // 
         {
             if (curTile == 17 && isStopping)
             {
@@ -154,7 +163,7 @@ public class PlayerBehaviour : NetworkBehaviour
                 StartCoroutine(GoByTheRoute(specRouteToGo, routes2));
             }
         }
-        else if ((curTile == 6  && isStopping)|| (specCurTile >= 12 && specCurTile <= 17 && isInSpecRoute))
+        else if ((curTile == 6 && isStopping) || (specCurTile >= 12 && specCurTile <= 17 && isInSpecRoute))
         {
             if (curTile == 6 && isStopping)
             {
@@ -185,6 +194,10 @@ public class PlayerBehaviour : NetworkBehaviour
             {
                 StartCoroutine(GoByTheRoute(specRouteToGo, routes4));
             }
+        }
+        else if (curTile == 20 && isStopping)
+        {
+            isLoseTurn = true;
         }
         else
         {
@@ -221,15 +234,6 @@ public class PlayerBehaviour : NetworkBehaviour
         }
         tParam = 0f;
 
-        // count steps left
-        stepNum--;
-        if (stepNum <= 0)
-        {
-            moveAllowed = false;
-            isStopping = true;
-            pt = PlayerTurn.notMyTurn;
-        }
-
         routeNum++;
 
         if (isNormalTile)
@@ -253,8 +257,8 @@ public class PlayerBehaviour : NetworkBehaviour
             specCurTile++;
             curTile++;
             specRouteToGo = routeNum;
-            
-            if(specRouteToGo > routes1.Length - 1)
+
+            if (specRouteToGo > routes1.Length - 1)
             {
                 specRouteToGo = 0;
                 isInSpecRoute = false;
@@ -282,6 +286,49 @@ public class PlayerBehaviour : NetworkBehaviour
             }
         }
         coroutineAllowed = true;
-        
+
+        // count steps left
+        stepNum--;
+        if (stepNum <= 0)
+        {
+            moveAllowed = false;
+            isStopping = true;
+            if (isBtw2Routes)
+            {
+                Debug.Log("bonus");
+                np.CmdBonusTurn();
+            }
+            else
+            {
+                Debug.Log("alter");
+                np.CmdAlterTurns();
+            }
+        }
+
+    }
+    public void SetupLocalPlayer()
+    {
+        //add color to your player
+        isLocalPlayer = true;
+    }
+
+    public void TurnStart()
+    {
+        if (isLocalPlayer)
+        {
+            Debug.Log("Start");
+            //spawn or enable player
+            isTurn = true;
+        }
+    }
+
+    public void TurnEnd()
+    {
+        if (isLocalPlayer)
+        {
+            Debug.Log("End");
+            // unspawn or disable player
+            isTurn = false;
+        }
     }
 }

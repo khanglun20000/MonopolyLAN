@@ -70,8 +70,6 @@
     <Compile Include="Assets\ParrelSync\ParrelSync\Editor\ClonesManagerWindow.cs" />
     <Compile Include="Assets\ParrelSync\ParrelSync\Editor\ExternalLinks.cs" />
     <Compile Include="Assets\ParrelSync\ParrelSync\Editor\FileUtilities.cs" />
-    <Compile Include="Assets\ParrelSync\ParrelSync\Editor\NonCore\AskFeedbackDialog.cs" />
-    <Compile Include="Assets\ParrelSync\ParrelSync\Editor\NonCore\OtherMenuItem.cs" />
     <Compile Include="Assets\ParrelSync\ParrelSync\Editor\Preferences.cs" />
     <Compile Include="Assets\ParrelSync\ParrelSync\Editor\Project.cs" />
     <Compile Include="Assets\ParrelSync\ParrelSync\Editor\UpdateChecker.cs" />

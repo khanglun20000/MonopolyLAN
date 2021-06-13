@@ -1,52 +1,87 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Mirror;
 
-enum GameState
+
+public class GameController : MonoBehaviour
 {
-    Setting,
-    PlayerTurn,
-    Action
-}
-public class GameController : NetworkBehaviour
-{
-    [SerializeField] private GameState state;
-    [SerializeField] private Transform[] Tiles;
-    [SerializeField] private Transform playerPf;
+    public static GameController Instance;
 
+    public Transform[] Tiles;
 
-    private int turnNum;
+    public static List<NetworkPlayer> players;
+
+    private int iActivePlayer;
+    
+    bool gameStarted = false;
+
     private void Awake()
     {
-        state = GameState.Setting;
-        
-
+        if (!Instance)
+        {
+            Instance = this;
+        }
     }
+
     // Start is called before the first frame update
     void Start()
     {
-        
+        players = new List<NetworkPlayer>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        switch (state)
+        if (players.Count > 0)
         {
-            case GameState.Setting:
-                break;
-            case GameState.PlayerTurn:
-                RollDice();
-                
-                break;
-            case GameState.Action:
-                
-                break;
+            CheckPlayersReady();
         }
     }
-    void RollDice()
-    {
 
+    bool CheckPlayersReady()
+    {
+        bool playersReady = true;
+        foreach (var player in players)
+        {
+            playersReady &= player.ready;
+        }
+
+        if (playersReady && !gameStarted)
+        {
+            if (players[0].isServer)
+            {
+                Debug.Log("startgame");
+                players[0].StartGame();
+                gameStarted = true;
+            }
+        }
+
+        return playersReady;
+    }
+
+    public void RegisterNetworkPlayer(NetworkPlayer player)
+    {
+        players.Add(player);
+    }
+
+    public void DeregisterNetworkPlayer(NetworkPlayer player)
+    {
+        players.Remove(player);
+    }
+
+    public IEnumerator SvAlterTurns()
+    {
+        players[iActivePlayer].SvTurnEnd();
+
+        yield return new WaitForEndOfFrame();
+        iActivePlayer = (iActivePlayer + 1) % players.Count;
+
+        players[iActivePlayer].SvTurnStart();
+    }
+    public IEnumerator SvBonusTurn()
+    {
+        players[iActivePlayer].SvTurnEnd();
+        yield return new WaitForEndOfFrame();
+        players[iActivePlayer].SvTurnStart();
     }
 }
