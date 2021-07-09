@@ -7,6 +7,8 @@ using UnityEngine.SceneManagement;
 
 public class NetworkManagerLobby : NetworkManager
 {
+    public static NetworkManagerLobby instance;
+
     [SerializeField] private int minPlayers = 0;
     [Scene] [SerializeField] private string menuScene = string.Empty;
 
@@ -19,12 +21,19 @@ public class NetworkManagerLobby : NetworkManager
 
     public static event Action OnClientConnected;
     public static event Action OnClientDisconnected;
-    public static event Action<NetworkConnection> OnServerReadied;
+    public static event Action<NetworkConnection, string> OnServerReadied;
     public static event Action OnServerStopped;
 
     public List<NetworkRoomPlayerLobby> RoomPlayers { get; } = new List<NetworkRoomPlayerLobby>();
 
     public List<NetworkGamePlayerLobby> GamePlayers { get; } = new List<NetworkGamePlayerLobby>();
+
+
+    public override void Awake()
+    {
+        base.Awake();
+        instance = this;
+    }
 
     public override void OnStartServer() => spawnPrefabs = Resources.LoadAll<GameObject>("SpawnablePrefabs").ToList();
 
@@ -143,10 +152,10 @@ public class NetworkManagerLobby : NetworkManager
                 var conn = RoomPlayers[i].connectionToClient;
                 var gameplayerInstance = Instantiate(gamePlayerPrefab);
                 gameplayerInstance.SetDisplayName(RoomPlayers[i].DisplayName);
-
                 NetworkServer.ReplacePlayerForConnection(conn, gameplayerInstance.gameObject, true);
 
-                NetworkServer.Destroy(conn.identity.gameObject);
+                //NetworkServer.Destroy(conn.identity.gameObject);
+
 
             }
         }
@@ -168,6 +177,6 @@ public class NetworkManagerLobby : NetworkManager
     {
         base.OnServerReady(conn);
 
-        OnServerReadied?.Invoke(conn);
+        OnServerReadied?.Invoke(conn, conn.identity.GetComponent<NetworkGamePlayerLobby>().displayName);
     }
 }

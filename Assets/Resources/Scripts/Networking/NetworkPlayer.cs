@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System;
 using UnityEngine;
 using Mirror;
 
@@ -11,16 +12,27 @@ public class NetworkPlayer : NetworkBehaviour
 
     [SyncVar] public bool ready = false;
 
+    public static event Action<string> OnSetDisplayName;
+
+    public static event Action<int> OnDisplayMoney;
+
+    public string playerName;
+
+    public int money;
+
     public PlayerBehaviour pb;
     private void Awake()
     {
-        if(isServer)
+        if (isServer)
             SetupServerPlayer();
     }
     // Update is called once per frame
     void Update()
     {
+        OnDisplayMoney?.Invoke(money);
         if(isTurn && isServer) CountDownTime();
+        if (Input.GetKeyDown(KeyCode.Space)) 
+            money += 200;
     }
 
     public override void OnStartClient()
@@ -32,6 +44,8 @@ public class NetworkPlayer : NetworkBehaviour
         {
             StartPlayer();
         }
+        OnSetDisplayName?.Invoke(playerName);
+
         GameController.Instance.RegisterNetworkPlayer(this);
     }
 
@@ -53,7 +67,8 @@ public class NetworkPlayer : NetworkBehaviour
         turnTimer -= Time.deltaTime;
         if (turnTimer <= 0)
         {
-            StartCoroutine(GameController.Instance.SvAlterTurns());
+            isTurn = false;
+            pb.RollDice();
         }
     }
 

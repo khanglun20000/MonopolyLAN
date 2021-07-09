@@ -9,7 +9,9 @@ public class GameController : MonoBehaviour
 
     public Transform[] Tiles;
 
-    public static List<NetworkPlayer> players;
+    public RectTransform[] spawnPointsUI;
+
+    public List<NetworkPlayer> players;
 
     private int iActivePlayer;
     
@@ -48,12 +50,13 @@ public class GameController : MonoBehaviour
 
         if (playersReady && !gameStarted)
         {
+            FindObjectOfType<UI_Status>().EnablePoint();
             if (players[0].isServer)
             {
                 Debug.Log("startgame");
                 players[0].StartGame();
-                gameStarted = true;
             }
+            gameStarted = true;
         }
 
         return playersReady;

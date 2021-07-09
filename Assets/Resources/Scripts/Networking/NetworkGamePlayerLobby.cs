@@ -6,7 +6,13 @@ using Mirror;
 public class NetworkGamePlayerLobby : NetworkBehaviour
 {
     [SyncVar]
-    private string displayName = "Loading...";
+    private string _displayName = "Loading...";
+
+    public string displayName
+    {
+        get { return _displayName; }
+        set { _displayName = value; }
+    }
 
     private NetworkManagerLobby room;
     private NetworkManagerLobby Room
@@ -33,6 +39,6 @@ public class NetworkGamePlayerLobby : NetworkBehaviour
     [Server]
     public void SetDisplayName(string displayName)
     {
-        this.displayName = displayName;
+        this._displayName = displayName;
     }
 }

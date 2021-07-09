@@ -111,22 +111,7 @@ public class PlayerBehaviour : MonoBehaviour
         {
             if (Input.GetKeyDown(KeyCode.Space) && moveAllowed == false && isTurn)
             {
-                moveAllowed = true;
-                if (isBtw2Routes)
-                {
-                    // roll 1 dice
-                    stepNum = Random.Range(1, 7);
-                }
-                else if (isLoseTurn)
-                {
-                    np.CmdAlterTurns();
-                    isLoseTurn = false;
-                }
-                else
-                {
-                    // roll 2 dices
-                    stepNum = Random.Range(2, 13);
-                }
+                RollDice();
             }
         }
 
@@ -211,7 +196,7 @@ public class PlayerBehaviour : MonoBehaviour
             }
         }
     }
-
+    #region Functions
     // follow a route
     private IEnumerator GoByTheRoute(int routeNum, Transform[] routesToGo)
     {
@@ -306,6 +291,30 @@ public class PlayerBehaviour : MonoBehaviour
         }
 
     }
+
+    public void RollDice()
+    {
+        np.isTurn = false;
+        moveAllowed = true;
+        if (isBtw2Routes)
+        {
+            // roll 1 dice
+            stepNum = Random.Range(1, 7);
+        }
+        else if (isLoseTurn)
+        {
+            np.CmdAlterTurns();
+            isLoseTurn = false;
+        }
+        else
+        {
+            // roll 2 dices
+            stepNum = Random.Range(2, 13);
+        }
+    }
+#endregion
+
+    #region Networking
     public void SetupLocalPlayer()
     {
         //add color to your player
@@ -331,4 +340,5 @@ public class PlayerBehaviour : MonoBehaviour
             isTurn = false;
         }
     }
+    #endregion
 }

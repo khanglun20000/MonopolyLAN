@@ -152,7 +152,9 @@ MonoBehaviour:
   isNormalTile: 1
   isBtw2Routes: 0
   isInSpecRoute: 0
+  isLoseTurn: 0
   isTurn: 0
+  isServer: 0
   isLocalPlayer: 0
 --- !u!114 &-3597254433820418394
 MonoBehaviour:
@@ -169,6 +171,6 @@ MonoBehaviour:
   syncMode: 0
   syncInterval: 0.1
   isTurn: 0
-  turnTimer: 20
+  turnTimer: 5
   ready: 0
   pb: {fileID: 1075351508}

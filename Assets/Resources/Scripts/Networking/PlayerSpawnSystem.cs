@@ -21,9 +21,10 @@ public class PlayerSpawnSystem : NetworkBehaviour
     private void OnDestroy() => NetworkManagerLobby.OnServerReadied -= SpawnPlayer;
 
     [Server]
-    public void SpawnPlayer(NetworkConnection conn)
+    public void SpawnPlayer(NetworkConnection conn, string name)
     {
         GameObject playerInstance = Instantiate(playerPrefab, spawnPoint.position + new Vector3(0,8f,0), spawnPoint.rotation);
-        NetworkServer.AddPlayerForConnection(conn, playerInstance);
+        playerInstance.GetComponent<NetworkPlayer>().playerName = name;
+        NetworkServer.ReplacePlayerForConnection(conn, playerInstance,true);
     }
 }
